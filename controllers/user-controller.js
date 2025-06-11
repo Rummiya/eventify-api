@@ -22,12 +22,6 @@ const UserController = {
 
 			const hashedPassword = await bcrypt.hash(password, 10);
 
-			// const png = jdenticon.toPng(`${name}${Date.now()}`, 200);
-			// const avatarName = `${name}_${Date.now()}.png`;
-			// const avatarPath = path.join(__dirname, '/../uploads', avatarName);
-
-			// fs.writeFileSync(avatarPath, png);
-
 			const user = await prisma.user.create({
 				data: {
 					email,
@@ -72,34 +66,27 @@ const UserController = {
 	},
 	getUserById: async (req, res) => {
 		const { id } = req.params;
-		const userId = req.user.userId;
+		// const userId = req.user.userId;
 
 		try {
 			const user = await prisma.user.findUnique({
 				where: { id },
 				include: {
-					following: {
+					follows: {
 						include: {
-							following: true,
+							company: true,
 						},
 					},
-					followers: {
+					registrations: {
 						include: {
-							follower: true,
-						},
-					},
-					posts: {
-						include: {
-							author: true,
-							comments: true,
-							likes: true,
+							event: true,
 						},
 					},
 					likes: {
 						include: {
-							post: {
+							event: {
 								include: {
-									author: true,
+									company: true,
 									comments: true,
 									likes: true,
 								},
@@ -113,51 +100,87 @@ const UserController = {
 				return res.status(404).json({ error: 'Пользователь не найден' });
 			}
 
-			const postWithLikeInfo = user.posts.map(post => ({
-				...post,
-				likedByUser: post.likes.some(like => like.userId === userId),
-			}));
+			const likedEvents = user.likes.map(like => like.event);
 
-			const likedPosts = user.likes.map(like => like.post);
-			const likedPostWithLikes = likedPosts.map(post => ({
-				...post,
-				likedByUser: post.likes.some(like => like.userId === userId),
-			}));
-
-			const isFollowing = await prisma.follow.findFirst({
-				where: {
-					AND: [{ followerId: userId }, { followingId: id }],
-				},
-			});
+			// Проверка: подписан ли currentUserId на компанию, которой принадлежит user
+			// const isFollowing = await prisma.companyFollower.findFirst({
+			// 		where: {
+			// 			AND: [
+			// 				{ userId: currentUserId },
+			// 				{ companyId:  },
+			// 			],
+			// 		},
+			//   });
 
 			res.json({
 				...user,
-				isFollowing: Boolean(isFollowing),
-				posts: postWithLikeInfo,
-				likedPosts: likedPostWithLikes,
+				likedEvents,
 			});
 		} catch (error) {
 			console.error('Get Current Error', error);
 			res.status(500).json({ error: 'Internal error server' });
 		}
 	},
-	getUsersByNickname: async (req, res) => {
+	getAllUsers: async (req, res) => {
 		try {
-			const { query } = req.query;
+			const {
+				orderBy = 'desc',
+				name = '',
+				role,
+				page = '1',
+				limit = '10',
+			} = req.query;
 
-			if (!query) {
-				return res.status(400).json({ message: 'Введите поисковой запрос' });
-			}
-			const users = await prisma.user.findMany({
+			const currentPage = parseInt(page, 10);
+			const take = parseInt(limit, 10);
+			const skip = (currentPage - 1) * take;
+
+			const validRoles = ['ADMIN', 'COMPANY_OWNER', 'USER'];
+			const normalizedRole =
+				typeof role === 'string' && validRoles.includes(role.toUpperCase())
+					? role.toUpperCase()
+					: undefined;
+
+			const totalUsers = await prisma.user.count({
 				where: {
 					name: {
-						contains: query,
+						contains: name,
 						mode: 'insensitive',
 					},
+					...(normalizedRole && { role: normalizedRole }),
 				},
 			});
 
-			res.json(users);
+			const users = await prisma.user.findMany({
+				skip,
+				take,
+				where: {
+					name: {
+						contains: name,
+						mode: 'insensitive',
+					},
+					...(normalizedRole && { role: normalizedRole }),
+				},
+				include: {
+					companyOwners: true,
+					comments: true,
+					follows: true,
+				},
+				orderBy: {
+					createdAt: orderBy === 'asc' ? 'asc' : 'desc',
+				},
+			});
+
+			const totalPages = Math.ceil(totalUsers / take);
+
+			res.json({
+				data: users,
+				meta: {
+					totalUsers,
+					totalPages,
+					currentPage,
+				},
+			});
 		} catch (error) {
 			res.status(500).json({ message: 'Internal server error', error });
 		}
@@ -165,7 +188,7 @@ const UserController = {
 	updateUser: async (req, res) => {
 		const { id } = req.params;
 		const userId = req.user.userId;
-		const { email, name, dateOfBirth, bio, location } = req.body;
+		const { email, name } = req.body;
 
 		let filePath;
 
@@ -194,9 +217,6 @@ const UserController = {
 					email: email || undefined,
 					name: name || undefined,
 					avatarUrl: filePath ? `/${filePath}` : undefined,
-					dateOfBirth: dateOfBirth || undefined,
-					bio: bio || undefined,
-					location: location || undefined,
 				},
 			});
 
@@ -213,14 +233,31 @@ const UserController = {
 			const user = await prisma.user.findUnique({
 				where: { id: userId },
 				include: {
-					followers: {
+					comments: {
 						include: {
-							follower: true,
+							event: true,
 						},
 					},
-					following: {
+					companyOwners: true,
+					follows: {
 						include: {
-							following: true,
+							company: true,
+						},
+					},
+					registrations: {
+						include: {
+							event: true,
+						},
+					},
+					likes: {
+						include: {
+							event: {
+								include: {
+									company: true,
+									comments: true,
+									likes: true,
+								},
+							},
 						},
 					},
 				},
