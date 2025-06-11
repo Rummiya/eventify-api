@@ -27,10 +27,10 @@ const upload = multer({ storage: storage });
 router.post('/register', UserController.register);
 router.post('/login', UserController.login);
 router.get('/current', authenticateToken, UserController.current);
-router.get('/user/:id', authenticateToken, UserController.getUserById);
-router.get('/users', authenticateToken, UserController.getUsersByNickname);
+router.get('/users/:id', authenticateToken, UserController.getUserById);
+router.get('/users', authenticateToken, UserController.getAllUsers);
 router.put(
-	'/user/:id',
+	'/users/:id',
 	authenticateToken,
 	upload.single('avatar'),
 	UserController.updateUser
