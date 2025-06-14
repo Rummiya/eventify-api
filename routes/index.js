@@ -2,10 +2,11 @@ const express = require('express');
 const multer = require('multer');
 const {
 	UserController,
-	PostController,
 	CommentController,
 	LikeController,
 	FollowController,
+	EventController,
+	CompanyController,
 } = require('../controllers');
 const authenticateToken = require('../midddleware/auth');
 
@@ -36,12 +37,19 @@ router.put(
 	UserController.updateUser
 );
 
-// Роуты поста
-router.post('/posts', authenticateToken, PostController.createPost);
-router.put('/posts/:id', authenticateToken, PostController.updatePost);
-router.get('/posts', authenticateToken, PostController.getAllPost);
-router.get('/posts/:id', authenticateToken, PostController.getPostById);
-router.delete('/posts/:id', authenticateToken, PostController.deletePost);
+router.get(
+	'/companies/my',
+	authenticateToken,
+	CompanyController.getMyCompanies
+);
+router.post('/companies', authenticateToken, CompanyController.createCompany);
+
+// Роуты мероприятий
+router.post('/events', authenticateToken, EventController.createEvent);
+router.put('/events/:id', authenticateToken, EventController.updateEvent);
+router.get('/events', authenticateToken, EventController.getAllEvents);
+router.get('/events/:id', authenticateToken, EventController.getEventById);
+router.delete('/events/:id', authenticateToken, EventController.deleteEvent);
 
 // Роуты комментария
 router.post('/comment', authenticateToken, CommentController.createComment);

@@ -1,13 +1,15 @@
 const UserController = require('./user-controller');
-const PostController = require('./post-controller');
+const EventController = require('./event-controller');
 const CommentController = require('./comment-controller');
 const LikeController = require('./like-controller');
 const FollowController = require('./follow-controller');
+const CompanyController = require('./company-controller');
 
 module.exports = {
 	UserController,
-	PostController,
+	EventController,
 	CommentController,
 	LikeController,
 	FollowController,
+	CompanyController,
 };
