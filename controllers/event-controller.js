@@ -1,11 +1,11 @@
 const { prisma } = require('../prisma/prisma-client');
+const isUserCompanyOwner = require('../services/permissions.js');
 
 const EventController = {
 	createEvent: async (req, res) => {
 		const {
 			title,
 			description,
-			imageUrl,
 			date,
 			time,
 			city,
@@ -15,6 +15,12 @@ const EventController = {
 			companyId,
 		} = req.body;
 		const userId = req.user.userId;
+
+		let filePath;
+
+		if (req.file && req.file.path) {
+			filePath = req.file.path;
+		}
 
 		const requiredFieldsMissing =
 			!title ||
@@ -41,12 +47,7 @@ const EventController = {
 				res.status(404).json({ error: 'Компания не найдена' });
 			}
 
-			const isOwner = await prisma.companyOwner.findFirst({
-				where: {
-					userId,
-					companyId,
-				},
-			});
+			const isOwner = await isUserCompanyOwner(userId, companyId);
 
 			if (!isOwner) {
 				return res.status(403).json({ error: 'Вы не владелец этой компании' });
@@ -56,7 +57,7 @@ const EventController = {
 				data: {
 					title,
 					description,
-					imageUrl,
+					imageUrl: filePath ? `/${filePath}` : undefined,
 					date,
 					time,
 					city,
@@ -85,22 +86,33 @@ const EventController = {
 		const {
 			title,
 			description,
-			imageUrl,
 			date,
 			time,
 			city,
 			address,
 			category,
 			capacity,
-			companyId,
 		} = req.body;
+		const userId = req.user.userId;
+
+		let filePath;
+
+		if (req.file && req.file.path) {
+			filePath = req.file.path;
+		}
 
 		try {
 			const event = await prisma.event.findUnique({
 				where: { id },
 			});
 
-			if (companyId !== event.companyId) {
+			if (!event) {
+				res.status(404).json({ error: 'Ивент не найден' });
+			}
+
+			const isOwner = await isUserCompanyOwner(userId, event.companyId);
+
+			if (!isOwner) {
 				return res.status(403).json({ error: 'Вы не владелец этой компании' });
 			}
 
@@ -109,7 +121,7 @@ const EventController = {
 				data: {
 					title,
 					description,
-					imageUrl,
+					imageUrl: filePath ? `/${filePath}` : undefined,
 					date,
 					time,
 					city,
@@ -127,26 +139,40 @@ const EventController = {
 	},
 	getAllEvents: async (req, res) => {
 		try {
-			const { category, city, upcoming, likedByUser } = req.query;
+			const {
+				category,
+				city,
+				upcoming,
+				likedByUser,
+				orderBy = 'desc',
+				page = '1',
+				limit = '10',
+			} = req.query;
 			const userId = req.user.userId;
 
-			const where = {};
+			const currentPage = parseInt(page, 10);
+			const take = parseInt(limit, 10);
+			const skip = (currentPage - 1) * take;
 
-			if (category) where.category = category;
-			if (city) where.city = city;
+			const filters = {};
+
+			if (category) filters.category = category;
+			if (city) filters.city = city;
 			if (upcoming === 'true') {
-				where.date = {
+				filters.date = {
 					gte: new Date(),
 					lte: new Date(new Date().setMonth(new Date().getMonth() + 1)),
 				};
 			}
 			if (likedByUser === 'true') {
-				where.likes = {
+				filters.likes = {
 					some: { userId },
 				};
 			}
 
 			const events = await prisma.event.findMany({
+				skip,
+				take,
 				select: {
 					id: true,
 					title: true,
@@ -172,9 +198,9 @@ const EventController = {
 						},
 					},
 				},
-				where,
+				where: filters,
 				orderBy: {
-					createdAt: 'desc',
+					createdAt: orderBy === 'asc' ? 'asc' : 'desc',
 				},
 			});
 
@@ -192,11 +218,7 @@ const EventController = {
 			const event = await prisma.event.findUnique({
 				where: { id },
 				include: {
-					comments: {
-						include: {
-							user: true,
-						},
-					},
+					comments: true,
 					likes: true,
 					company: true,
 					registrations: true,
@@ -204,7 +226,7 @@ const EventController = {
 			});
 
 			if (!event) {
-				return res.status(404).json({ error: 'Пост не найден' });
+				return res.status(404).json({ error: 'Мероприятие не найдено' });
 			}
 
 			const eventWithLikeInfo = {
@@ -219,30 +241,35 @@ const EventController = {
 		}
 	},
 	deleteEvent: async (req, res) => {
-		const { id } = req.params;
-		const userId = req.user.userId;
-
-		const event = await prisma.event.findUnique({
-			where: { id },
-		});
-
-		if (!event) {
-			return res.status(404).json({ error: 'Пост не найден' });
-		}
-
-		if (event.companyId !== userId) {
-			return res.status(403).json({ error: 'Вы не автор поста' });
-		}
 		try {
+			const { id } = req.params;
+			const userId = req.user.userId;
+
+			const event = await prisma.event.findUnique({
+				where: { id },
+			});
+
+			if (!event) {
+				return res.status(404).json({ error: 'Пост не найден' });
+			}
+
+			const isOwner = await isUserCompanyOwner(userId, event.companyId);
+
+			if (!isOwner) {
+				return res
+					.status(403)
+					.json({ error: 'Вы не владелец компании, разместившей этот пост' });
+			}
+
 			const transaction = await prisma.$transaction([
-				prisma.comment.deleteMany({ where: { postId: id } }),
-				prisma.like.deleteMany({ where: { postId: id } }),
-				prisma.post.delete({ where: { id } }),
+				prisma.comment.deleteMany({ where: { eventId: id } }),
+				prisma.like.deleteMany({ where: { eventId: id } }),
+				prisma.event.delete({ where: { id } }),
 			]);
 
 			res.json(transaction);
 		} catch (error) {
-			console.error('delete post error', error);
+			console.error('delete event error', error);
 			res.status(500).json({ error: 'Internal error server' });
 		}
 	},

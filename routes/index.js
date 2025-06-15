@@ -45,8 +45,18 @@ router.get(
 router.post('/companies', authenticateToken, CompanyController.createCompany);
 
 // Роуты мероприятий
-router.post('/events', authenticateToken, EventController.createEvent);
-router.put('/events/:id', authenticateToken, EventController.updateEvent);
+router.post(
+	'/events',
+	authenticateToken,
+	upload.single('banner'),
+	EventController.createEvent
+);
+router.put(
+	'/events/:id',
+	authenticateToken,
+	upload.single('banner'),
+	EventController.updateEvent
+);
 router.get('/events', authenticateToken, EventController.getAllEvents);
 router.get('/events/:id', authenticateToken, EventController.getEventById);
 router.delete('/events/:id', authenticateToken, EventController.deleteEvent);
