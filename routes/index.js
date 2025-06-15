@@ -9,19 +9,11 @@ const {
 	CompanyController,
 } = require('../controllers');
 const authenticateToken = require('../midddleware/auth');
+const storage = require('../utils/uploadsStorage');
 
 const router = express.Router();
 
-const uploadDestination = 'uploads';
-
 // показываем, где хранить файлы
-const storage = multer.diskStorage({
-	destination: uploadDestination,
-	filename: function (req, file, cb) {
-		cb(null, file.originalname);
-	},
-});
-
 const upload = multer({ storage: storage });
 
 // Роуты юзера
@@ -42,7 +34,12 @@ router.get(
 	authenticateToken,
 	CompanyController.getMyCompanies
 );
-router.post('/companies', authenticateToken, CompanyController.createCompany);
+router.post(
+	'/companies',
+	authenticateToken,
+	upload.single('logo'),
+	CompanyController.createCompany
+);
 
 // Роуты мероприятий
 router.post(
