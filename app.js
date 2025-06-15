@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const fs = require('fs');
 const cors = require('cors');
+const ensureUploadDirs = require('./utils/ensureUploadDirs');
 require('dotenv').config();
 
 const app = express();
@@ -23,9 +24,14 @@ app.use(
 app.use('/uploads', express.static('uploads'));
 app.use('/api', require('./routes'));
 
-if (!fs.existsSync('uploads')) {
-	fs.mkdirSync('uploads');
-}
+const uploadDirs = [
+	'uploads',
+	'uploads/avatars',
+	'uploads/logos',
+	'uploads/banners',
+];
+
+ensureUploadDirs(uploadDirs);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
