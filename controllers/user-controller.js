@@ -1,8 +1,5 @@
 const bcrypt = require('bcryptjs');
 const { prisma } = require('../prisma/prisma-client');
-const jdenticon = require('jdenticon');
-const path = require('path');
-const fs = require('fs');
 const jwt = require('jsonwebtoken');
 
 const UserController = {
@@ -84,13 +81,7 @@ const UserController = {
 					},
 					likes: {
 						include: {
-							event: {
-								include: {
-									company: true,
-									comments: true,
-									likes: true,
-								},
-							},
+							event: true,
 						},
 					},
 				},
@@ -100,22 +91,7 @@ const UserController = {
 				return res.status(404).json({ error: 'Пользователь не найден' });
 			}
 
-			const likedEvents = user.likes.map(like => like.event);
-
-			// Проверка: подписан ли currentUserId на компанию, которой принадлежит user
-			// const isFollowing = await prisma.companyFollower.findFirst({
-			// 		where: {
-			// 			AND: [
-			// 				{ userId: currentUserId },
-			// 				{ companyId:  },
-			// 			],
-			// 		},
-			//   });
-
-			res.json({
-				...user,
-				likedEvents,
-			});
+			res.json(user);
 		} catch (error) {
 			console.error('Get Current Error', error);
 			res.status(500).json({ error: 'Internal error server' });
@@ -124,9 +100,9 @@ const UserController = {
 	getAllUsers: async (req, res) => {
 		try {
 			const {
-				orderBy = 'desc',
 				name = '',
 				role,
+				orderBy = 'desc',
 				page = '1',
 				limit = '10',
 			} = req.query;
