@@ -6,7 +6,7 @@ const storage = multer.diskStorage({
 		const folderMap = {
 			avatar: 'uploads/avatars',
 			banner: 'uploads/banners',
-			logo: 'uploads/company-logos',
+			logo: 'uploads/logos',
 		};
 
 		const folder = folderMap[file.fieldname];
