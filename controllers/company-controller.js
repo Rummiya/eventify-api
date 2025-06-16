@@ -1,4 +1,5 @@
 const { prisma } = require('../prisma/prisma-client');
+const isUserCompanyOwner = require('../services/permissions');
 
 const CompanyController = {
 	getMyCompanies: async (req, res) => {
@@ -32,9 +33,7 @@ const CompanyController = {
 		}
 
 		if (!name) {
-			return res
-				.status(400)
-				.json({ error: 'Введите название компании или авторизуйтесь' });
+			return res.status(400).json({ error: 'Введите название компании' });
 		}
 
 		try {
@@ -80,6 +79,47 @@ const CompanyController = {
 			console.error(error);
 			res.status(500).json({ error: 'Ошибка при создании компании' });
 		}
+	},
+	updateCompany: async (req, res) => {
+		const { id } = req.params;
+		const { name, bio, website } = req.body;
+		const userId = req.user.userId;
+
+		let filePath;
+
+		if (req.file && req.file.path) {
+			filePath = req.file.path;
+		}
+
+		const company = await prisma.company.findUnique({
+			where: {
+				id,
+			},
+		});
+
+		if (!company) {
+			res.status(404).json({ error: 'Компания не найдена' });
+		}
+
+		const isOwner = await isUserCompanyOwner(userId, company.id);
+
+		if (!isOwner) {
+			return res.status(403).json({ error: 'Вы не владелец этой компании' });
+		}
+
+		const updatedCompany = await prisma.company.update({
+			where: {
+				id: company.id,
+			},
+			data: {
+				name,
+				logoUrl: filePath ? `/${filePath}` : undefined,
+				bio,
+				website,
+			},
+		});
+
+		res.json(updatedCompany);
 	},
 };
 

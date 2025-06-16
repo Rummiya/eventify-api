@@ -40,6 +40,12 @@ router.post(
 	upload.single('logo'),
 	CompanyController.createCompany
 );
+router.put(
+	'/companies/:id',
+	authenticateToken,
+	upload.single('logo'),
+	CompanyController.updateCompany
+);
 
 // Роуты мероприятий
 router.post(
