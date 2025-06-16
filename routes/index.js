@@ -46,6 +46,7 @@ router.put(
 	upload.single('logo'),
 	CompanyController.updateCompany
 );
+router.get('/companies', authenticateToken, CompanyController.getAllCompanies);
 
 // Роуты мероприятий
 router.post(

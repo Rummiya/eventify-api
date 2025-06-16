@@ -121,6 +121,40 @@ const CompanyController = {
 
 		res.json(updatedCompany);
 	},
+	getAllCompanies: async (req, res) => {
+		const { name, followed } = req.query;
+		const userId = req.user.userId;
+
+		const filters = {};
+
+		if (followed === 'true') {
+			filters.followers = {
+				some: {
+					userId,
+				},
+			};
+		}
+		if (name) {
+			filters.name = {
+				contains: name,
+				mode: 'insensitive',
+			};
+		}
+
+		const companies = await prisma.company.findMany({
+			where: filters,
+			include: {
+				_count: {
+					select: {
+						events: true,
+						followers: true,
+					},
+				},
+			},
+		});
+
+		res.json(companies);
+	},
 };
 
 module.exports = CompanyController;
