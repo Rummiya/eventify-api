@@ -47,6 +47,11 @@ router.put(
 	CompanyController.updateCompany
 );
 router.get('/companies', authenticateToken, CompanyController.getAllCompanies);
+router.get(
+	'/companies/:id',
+	authenticateToken,
+	CompanyController.getCompanyById
+);
 
 // Роуты мероприятий
 router.post(

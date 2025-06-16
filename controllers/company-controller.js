@@ -163,6 +163,56 @@ const CompanyController = {
 			res.status(500).json({ error: 'Internal Server Error' });
 		}
 	},
+	getCompanyById: async (req, res) => {
+		const { id } = req.params;
+
+		try {
+			const company = await prisma.company.findUnique({
+				where: {
+					id,
+				},
+				include: {
+					events: {
+						select: {
+							id: true,
+							title: true,
+							address: true,
+							city: true,
+							category: true,
+							date: true,
+							imageUrl: true,
+							createdAt: true,
+							updatedAt: true,
+							_count: {
+								select: {
+									comments: true,
+									likes: true,
+									registrations: true,
+								},
+							},
+							company: {
+								select: {
+									id: true,
+									name: true,
+									logoUrl: true,
+								},
+							},
+						},
+					},
+					_count: {
+						select: {
+							followers: true,
+							events: true,
+						},
+					},
+				},
+			});
+
+			res.json(company);
+		} catch (error) {
+			res.status(500).json({ error: 'Internal Server Error' });
+		}
+	},
 };
 
 module.exports = CompanyController;
