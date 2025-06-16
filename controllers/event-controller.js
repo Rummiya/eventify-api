@@ -44,7 +44,7 @@ const EventController = {
 			});
 
 			if (!existingCompany) {
-				res.status(404).json({ error: 'Компания не найдена' });
+				return res.status(404).json({ error: 'Компания не найдена' });
 			}
 
 			const isOwner = await isUserCompanyOwner(userId, companyId);
@@ -75,6 +75,7 @@ const EventController = {
 					registrations: true,
 				},
 			});
+
 			res.json(event);
 		} catch (error) {
 			console.error(error);
@@ -107,7 +108,7 @@ const EventController = {
 			});
 
 			if (!event) {
-				res.status(404).json({ error: 'Ивент не найден' });
+				return res.status(404).json({ error: 'Ивент не найден' });
 			}
 
 			const isOwner = await isUserCompanyOwner(userId, event.companyId);

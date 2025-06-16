@@ -99,7 +99,7 @@ const CompanyController = {
 			});
 
 			if (!company) {
-				res.status(404).json({ error: 'Компания не найдена' });
+				return res.status(404).json({ error: 'Компания не найдена' });
 			}
 
 			const isOwner = await isUserCompanyOwner(userId, company.id);
