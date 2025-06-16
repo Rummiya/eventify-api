@@ -52,6 +52,11 @@ router.get(
 	authenticateToken,
 	CompanyController.getCompanyById
 );
+router.delete(
+	'/companies/:id',
+	authenticateToken,
+	CompanyController.deleteCompany
+);
 
 // Роуты мероприятий
 router.post(

@@ -213,6 +213,42 @@ const CompanyController = {
 			res.status(500).json({ error: 'Internal Server Error' });
 		}
 	},
+	deleteCompany: async (req, res) => {
+		const { id } = req.params;
+		const userId = req.user.userId;
+
+		try {
+			const company = await prisma.company.findUnique({
+				where: {
+					id,
+				},
+			});
+
+			if (!company) {
+				return res.status(404).json({ error: 'Компания не найдена' });
+			}
+
+			const isOwner = await isUserCompanyOwner(userId, company.id);
+
+			if (!isOwner) {
+				return res
+					.status(403)
+					.json({ error: 'Вы не являетесь владельцем компании' });
+			}
+
+			const transaction = await prisma.$transaction([
+				prisma.companyFollower.deleteMany({ where: { companyId: id } }),
+				prisma.companyOwner.deleteMany({ where: { companyId: id } }),
+				prisma.event.deleteMany({ where: { companyId: id } }),
+				prisma.company.delete({ where: { id } }),
+			]);
+
+			res.json(transaction);
+		} catch (error) {
+			console.log(error);
+			res.status(500).json({ error: 'Internal Server Error' });
+		}
+	},
 };
 
 module.exports = CompanyController;
