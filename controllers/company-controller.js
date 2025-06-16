@@ -22,8 +22,14 @@ const CompanyController = {
 		}
 	},
 	createCompany: async (req, res) => {
-		const { name, logoUrl, bio, website } = req.body;
+		const { name, bio, website } = req.body;
 		const userId = req.user.userId;
+
+		let filePath;
+
+		if (req.file && req.file.path) {
+			filePath = req.file.path;
+		}
 
 		if (!name) {
 			return res
@@ -47,7 +53,7 @@ const CompanyController = {
 			const company = await prisma.company.create({
 				data: {
 					name,
-					logoUrl,
+					logoUrl: filePath ? `/${filePath}` : undefined,
 					bio,
 					website,
 					owners: {
