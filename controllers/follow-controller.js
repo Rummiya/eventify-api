@@ -1,7 +1,7 @@
 const { prisma } = require('../prisma/prisma-client');
 
 const FollowController = {
-	followUser: async (req, res) => {
+	followCompany: async (req, res) => {
 		const { companyId } = req.body;
 		const userId = req.user.userId;
 
@@ -31,7 +31,7 @@ const FollowController = {
 			res.status(500).json({ error: 'Internal Server Error' });
 		}
 	},
-	unfollowUser: async (req, res) => {
+	unfollowCompany: async (req, res) => {
 		const { companyId } = req.body;
 		const userId = req.user.userId;
 

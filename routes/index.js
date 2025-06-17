@@ -88,11 +88,11 @@ router.post('/like', authenticateToken, LikeController.addLike);
 router.delete('/like/:id', authenticateToken, LikeController.removeLike);
 
 // Роуты подписок
-router.post('/follow', authenticateToken, FollowController.followUser);
+router.post('/follow', authenticateToken, FollowController.followCompany);
 router.delete(
 	'/unfollow/:id',
 	authenticateToken,
-	FollowController.unfollowUser
+	FollowController.unfollowCompany
 );
 
 module.exports = router;
