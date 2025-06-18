@@ -88,6 +88,11 @@ router.post(
 	authenticateToken,
 	RegistrationController.addRegistration
 );
+router.delete(
+	'/registrations/:id',
+	authenticateToken,
+	RegistrationController.removeRegistration
+);
 
 // Роуты комментария
 router.post('/comment', authenticateToken, CommentController.createComment);
