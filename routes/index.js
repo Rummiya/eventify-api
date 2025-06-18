@@ -7,6 +7,7 @@ const {
 	FollowController,
 	EventController,
 	CompanyController,
+	AuthController,
 } = require('../controllers');
 const authenticateToken = require('../midddleware/auth');
 const storage = require('../utils/uploadsStorage');
@@ -16,9 +17,11 @@ const router = express.Router();
 // показываем, где хранить файлы
 const upload = multer({ storage: storage });
 
+// Роуты авторизации
+router.post('/login', AuthController.login);
+router.post('/register', AuthController.register);
+
 // Роуты юзера
-router.post('/register', UserController.register);
-router.post('/login', UserController.login);
 router.get('/current', authenticateToken, UserController.current);
 router.get('/users/:id', authenticateToken, UserController.getUserById);
 router.get('/users', authenticateToken, UserController.getAllUsers);
@@ -29,6 +32,7 @@ router.put(
 	UserController.updateUser
 );
 
+// Роуты компании
 router.get(
 	'/companies/my',
 	authenticateToken,

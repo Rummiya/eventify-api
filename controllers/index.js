@@ -4,8 +4,10 @@ const CommentController = require('./comment-controller');
 const LikeController = require('./like-controller');
 const FollowController = require('./follow-controller');
 const CompanyController = require('./company-controller');
+const AuthController = require('./auth-controller');
 
 module.exports = {
+	AuthController,
 	UserController,
 	EventController,
 	CommentController,
