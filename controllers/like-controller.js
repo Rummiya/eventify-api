@@ -2,16 +2,24 @@ const { prisma } = require('../prisma/prisma-client');
 
 const LikeController = {
 	addLike: async (req, res) => {
-		const { postId } = req.body;
+		const { eventId } = req.body;
 		const userId = req.user.userId;
 
-		if (!postId) {
+		if (!eventId) {
 			return res.status(400).json({ error: 'Заполните все поля' });
 		}
 
 		try {
+			const event = await prisma.event.findUnique({
+				where: { id: eventId },
+			});
+
+			if (!event) {
+				return res.status(404).json({ error: 'Мероприятие не найдено' });
+			}
+
 			const existingLike = await prisma.like.findFirst({
-				where: { postId, userId },
+				where: { eventId, userId },
 			});
 
 			if (existingLike) {
@@ -20,12 +28,12 @@ const LikeController = {
 
 			const like = await prisma.like.create({
 				data: {
-					postId,
+					eventId,
 					userId,
 				},
 			});
 
-			res.json(like);
+			res.json({ data: like, message: 'Успешно добавлено в избранные' });
 		} catch (error) {
 			console.error('Add Like Error', error);
 			res.status(500).json({ error: 'Internal error server' });
@@ -36,23 +44,31 @@ const LikeController = {
 		const userId = req.user.userId;
 
 		if (!id) {
-			return res.status(400).json({ error: 'Не передан ID поста' });
+			return res.status(400).json({ error: 'Не передан ID ивента' });
 		}
 
 		try {
+			const event = await prisma.event.findUnique({
+				where: { id },
+			});
+
+			if (!event) {
+				return res.status(404).json({ error: 'Мероприятие не найдено' });
+			}
+
 			const existingLike = await prisma.like.findFirst({
-				where: { postId: id, userId },
+				where: { eventId: id, userId },
 			});
 
 			if (!existingLike) {
-				return res.status(400).json({ error: 'Дизлайк уже существует' });
+				return res.status(400).json({ error: 'Лайк не найден' });
 			}
 
-			const like = await prisma.like.deleteMany({
-				where: { postId: id, userId },
+			await prisma.like.deleteMany({
+				where: { eventId: id, userId },
 			});
 
-			res.json(like);
+			res.status(201).json({ message: 'Успешно удалено из избранных' });
 		} catch (error) {
 			console.error('Delete Like Error', error);
 			res.status(500).json({ error: 'Internal error server' });
