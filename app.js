@@ -1,14 +1,21 @@
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
+
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
+
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./swagger');
+
 const ensureUploadDirs = require('./utils/ensureUploadDirs');
+
 require('dotenv').config();
 
 const app = express();
 
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
