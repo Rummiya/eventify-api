@@ -18,8 +18,8 @@ const router = express.Router();
 const upload = multer({ storage: storage });
 
 // Роуты авторизации
-router.post('/login', AuthController.login);
-router.post('/register', AuthController.register);
+router.post('/auth/login', AuthController.login);
+router.post('/auth/register', AuthController.register);
 
 // Роуты юзера
 router.get('/current', authenticateToken, UserController.current);
