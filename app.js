@@ -30,6 +30,7 @@ app.use(
 app.use('/uploads', express.static('uploads'));
 app.use('/api', require('./routes'));
 
+// Название папок для картинок
 const uploadDirs = [
 	'uploads',
 	'uploads/avatars',
@@ -37,6 +38,7 @@ const uploadDirs = [
 	'uploads/banners',
 ];
 
+// Создаем папки для картинок, если их нет
 ensureUploadDirs(uploadDirs);
 
 // catch 404 and forward to error handler
