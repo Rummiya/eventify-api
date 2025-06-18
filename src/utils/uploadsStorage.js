@@ -15,7 +15,7 @@ export const storage = multer.diskStorage({
 			return cb(new Error('Invalid field name for file upload'), null);
 		}
 
-		cb(null, folder);
+		cb(null, path.resolve(folder));
 	},
 
 	filename: (req, file, cb) => {

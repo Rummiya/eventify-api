@@ -9,8 +9,8 @@ import { configDotenv } from 'dotenv';
 import logger from 'morgan';
 
 import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from './config/swagger.js';
 import { router } from './routes/index.js';
-import { swaggerSpec } from './swagger.js';
 
 import { ensureUploadDirs } from './utils/ensureUploadDirs.js';
 
@@ -31,9 +31,9 @@ app.set('view engine', 'jade');
 
 app.use(
 	'/public/images',
-	express.static(path.join(__dirname, 'public', 'images'))
+	express.static(path.join(__dirname, '../public/images'))
 );
-app.use('/uploads', express.static('uploads'));
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 app.use('/api', router);
 
 // Название папок для картинок
@@ -45,7 +45,7 @@ const uploadDirs = [
 ];
 
 // Создаем папки для картинок, если их нет
-ensureUploadDirs(uploadDirs);
+ensureUploadDirs(uploadDirs, path.resolve(__dirname, '..'));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
