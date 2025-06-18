@@ -1,6 +1,6 @@
-const { prisma } = require('../prisma/prisma-client');
+import { prisma } from '../prisma/prisma-client.js';
 
-const CommentController = {
+export const CommentController = {
 	createComment: async (req, res) => {
 		const { content, postId } = req.body;
 		const userId = req.user.userId;
@@ -50,5 +50,3 @@ const CommentController = {
 		}
 	},
 };
-
-module.exports = CommentController;

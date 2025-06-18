@@ -1,6 +1,6 @@
-const { prisma } = require('../prisma/prisma-client');
+import { prisma } from '../prisma/prisma-client.js';
 
-const FollowController = {
+export const FollowController = {
 	followCompany: async (req, res) => {
 		const { companyId } = req.body;
 		const userId = req.user.userId;
@@ -55,5 +55,3 @@ const FollowController = {
 		}
 	},
 };
-
-module.exports = FollowController;

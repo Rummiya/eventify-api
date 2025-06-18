@@ -1,8 +1,8 @@
-const { prisma } = require('../prisma/prisma-client');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { prisma } from '../prisma/prisma-client.js';
 
-const AuthController = {
+export const AuthController = {
 	register: async (req, res) => {
 		const { email, password, name } = req.body;
 
@@ -62,5 +62,3 @@ const AuthController = {
 		}
 	},
 };
-
-module.exports = AuthController;

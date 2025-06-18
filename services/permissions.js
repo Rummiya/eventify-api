@@ -1,11 +1,9 @@
-const { prisma } = require('../prisma/prisma-client');
+import { prisma } from '../prisma/prisma-client.js';
 
-async function isUserCompanyOwner(userId, companyId) {
+export const isUserCompanyOwner = async (userId, companyId) => {
 	const owner = await prisma.companyOwner.findFirst({
 		where: { userId, companyId },
 	});
 
 	return Boolean(owner);
-}
-
-module.exports = isUserCompanyOwner;
+};

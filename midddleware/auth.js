@@ -1,7 +1,7 @@
-const jwt = require('jsonwebtoken');
-const { prisma } = require('../prisma/prisma-client');
+import jwt from 'jsonwebtoken';
+import { prisma } from '../prisma/prisma-client.js';
 
-const authenticateToken = async (req, res, next) => {
+export const authenticateToken = async (req, res, next) => {
 	const authHeader = req.headers['authorization'];
 	const token = authHeader && authHeader.split(' ')[1];
 
@@ -30,5 +30,3 @@ const authenticateToken = async (req, res, next) => {
 			.json({ error: 'Недействительный или просроченный токен' });
 	}
 };
-
-module.exports = authenticateToken;

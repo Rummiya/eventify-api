@@ -1,19 +1,25 @@
-const createError = require('http-errors');
-const express = require('express');
-const path = require('path');
+import express from 'express';
+import createError from 'http-errors';
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
-const cookieParser = require('cookie-parser');
-const logger = require('morgan');
-const cors = require('cors');
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import { configDotenv } from 'dotenv';
+import logger from 'morgan';
 
-const swaggerUi = require('swagger-ui-express');
-const swaggerSpec = require('./swagger');
+import swaggerUi from 'swagger-ui-express';
+import { router } from './routes/index.js';
+import { swaggerSpec } from './swagger.js';
 
-const ensureUploadDirs = require('./utils/ensureUploadDirs');
+import { ensureUploadDirs } from './utils/ensureUploadDirs.js';
 
-require('dotenv').config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-const app = express();
+configDotenv();
+
+export const app = express();
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(cors());
@@ -28,7 +34,7 @@ app.use(
 	express.static(path.join(__dirname, 'public', 'images'))
 );
 app.use('/uploads', express.static('uploads'));
-app.use('/api', require('./routes'));
+app.use('/api', router);
 
 // Название папок для картинок
 const uploadDirs = [
@@ -56,5 +62,3 @@ app.use(function (err, req, res, next) {
 	res.status(err.status || 500);
 	res.render('error');
 });
-
-module.exports = app;

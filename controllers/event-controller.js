@@ -1,7 +1,7 @@
-const { prisma } = require('../prisma/prisma-client');
-const isUserCompanyOwner = require('../services/permissions.js');
+import { prisma } from '../prisma/prisma-client.js';
+import { isUserCompanyOwner } from '../services/permissions.js';
 
-const EventController = {
+export const EventController = {
 	createEvent: async (req, res) => {
 		const {
 			title,
@@ -275,5 +275,3 @@ const EventController = {
 		}
 	},
 };
-
-module.exports = EventController;

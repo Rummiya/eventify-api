@@ -1,18 +1,20 @@
-const express = require('express');
-const multer = require('multer');
-const {
-	UserController,
-	CommentController,
-	LikeController,
-	FollowController,
-	EventController,
-	CompanyController,
-	AuthController,
-} = require('../controllers');
-const authenticateToken = require('../midddleware/auth');
-const storage = require('../utils/uploadsStorage');
+import express from 'express';
+import multer from 'multer';
 
-const router = express.Router();
+import { authenticateToken } from '../midddleware/auth.js';
+import { storage } from '../utils/uploadsStorage.js';
+
+import {
+	AuthController,
+	CommentController,
+	CompanyController,
+	EventController,
+	FollowController,
+	LikeController,
+	UserController,
+} from '../controllers/index.js';
+
+export const router = express.Router();
 
 // показываем, где хранить файлы
 const upload = multer({ storage: storage });
@@ -98,5 +100,3 @@ router.delete(
 	authenticateToken,
 	FollowController.unfollowCompany
 );
-
-module.exports = router;

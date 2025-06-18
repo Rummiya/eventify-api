@@ -1,6 +1,6 @@
-const { prisma } = require('../prisma/prisma-client');
+import { prisma } from '../prisma/prisma-client.js';
 
-const UserController = {
+export const UserController = {
 	getUserById: async (req, res) => {
 		const { id } = req.params;
 
@@ -189,5 +189,3 @@ const UserController = {
 		}
 	},
 };
-
-module.exports = UserController;

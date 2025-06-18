@@ -1,7 +1,7 @@
-const { prisma } = require('../prisma/prisma-client');
-const isUserCompanyOwner = require('../services/permissions');
+import { prisma } from '../prisma/prisma-client.js';
+import { isUserCompanyOwner } from '../services/permissions.js';
 
-const CompanyController = {
+export const CompanyController = {
 	getMyCompanies: async (req, res) => {
 		try {
 			const userId = req.user.userId;
@@ -250,5 +250,3 @@ const CompanyController = {
 		}
 	},
 };
-
-module.exports = CompanyController;
