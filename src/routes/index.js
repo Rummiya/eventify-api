@@ -11,6 +11,7 @@ import {
 	EventController,
 	FollowController,
 	LikeController,
+	RegistrationController,
 	UserController,
 } from '../controllers/index.js';
 
@@ -80,6 +81,13 @@ router.put(
 router.get('/events', authenticateToken, EventController.getAllEvents);
 router.get('/events/:id', authenticateToken, EventController.getEventById);
 router.delete('/events/:id', authenticateToken, EventController.deleteEvent);
+
+// Роуты регистрации на ивенты
+router.post(
+	'/registrations',
+	authenticateToken,
+	RegistrationController.addRegistration
+);
 
 // Роуты комментария
 router.post('/comment', authenticateToken, CommentController.createComment);
