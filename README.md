@@ -47,24 +47,31 @@
   - [x] CompanyOwner
 
 - [x] 🧠 Создать контроллеры
+
   - [x] User (register, login, current, getAllUsers, getByUserId)
   - [x] Companies (crud)
   - [x] Events (crud)
   - [ ] Registrations (register, unregister)
   - [x] Like (like, unlike)
   - [x] Comment (crud)
+
 - [x] Добавить фильтры для
 
   - [x] GET Users (по ролям, имени, дате регистрации)
   - [x] GET Events (по категории, городу, ближайшие, лайкнутые)
 
 - [x] 🛣️ Переписать/написать маршруты
+
   - [x] `/api/auth`
   - [x] `/api/users`
   - [x] `/api/events`
   - [ ] `/api/registrations`
   - [x] `/api/companies`
+
+- [x] Перейти с CommonJS на ES Modules
+
 - [ ] Добавить swagger документацию
+
   - [ ] `/auth`
   - [ ] `/users`
   - [ ] `/events`
@@ -72,6 +79,7 @@
   - [ ] `/companies`
   - [ ] `/likes`
   - [ ] `/comments`
+
 - [ ] Интегрировать TypeScript
 
   - [ ] Протипизировать ВСЕ
