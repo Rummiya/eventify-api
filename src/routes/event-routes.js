@@ -1,10 +1,10 @@
-import express from 'express';
+import { Router } from 'express';
 import multer from 'multer';
 import { EventController } from '../controllers/index.js';
 import { authenticateToken } from '../middleware/auth.js';
 import { storage } from '../utils/uploadsStorage.js';
 
-export const eventRouter = express.Router();
+export const eventRouter = Router();
 
 // показываем, где хранить файлы
 const upload = multer({ storage });

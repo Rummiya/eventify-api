@@ -1,10 +1,10 @@
-import express from 'express';
+import { Router } from 'express';
 import multer from 'multer';
 import { CompanyController } from '../controllers/index.js';
 import { authenticateToken } from '../middleware/auth.js';
 import { storage } from '../utils/uploadsStorage.js';
 
-export const companyRouter = express.Router();
+export const companyRouter = Router();
 
 // показываем, где хранить файлы
 const upload = multer({ storage });

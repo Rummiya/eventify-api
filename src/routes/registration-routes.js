@@ -1,8 +1,8 @@
-import express from 'express';
+import { Router } from 'express';
 import { RegistrationController } from '../controllers/index.js';
 import { authenticateToken } from '../middleware/auth.js';
 
-export const registrationRouter = express.Router();
+export const registrationRouter = Router();
 
 registrationRouter.post(
 	'/registrations',

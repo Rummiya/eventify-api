@@ -1,4 +1,4 @@
-import express from 'express';
+import { Router } from 'express';
 import { authRouter } from './auth-routes.js';
 import { commentRouter } from './comment-routes.js';
 import { companyRouter } from './company-routes.js';
@@ -8,7 +8,7 @@ import { likeRouter } from './like-routes.js';
 import { registrationRouter } from './registration-routes.js';
 import { userRouter } from './user-routes.js';
 
-export const router = express.Router();
+export const router = Router();
 
 router.use(authRouter);
 router.use(userRouter);
