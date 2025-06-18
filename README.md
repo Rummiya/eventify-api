@@ -49,11 +49,13 @@
 - [x] 🧠 Создать контроллеры
 
   - [x] User (register, login, current, getAllUsers, getByUserId)
-  - [x] Companies (crud)
-  - [x] Events (crud)
-  - [ ] Registrations (register, unregister)
+  - [x] Company (crud)
+  - [x] Event (crud)
+  - [x] Registration (register, unregister)
   - [x] Like (like, unlike)
   - [x] Comment (crud)
+  - [x] CompanyFollow (follow, unfollow)
+  - [ ] CompanyOwner (crud)
 
 - [x] Добавить фильтры для
 
@@ -65,7 +67,7 @@
   - [x] `/api/auth`
   - [x] `/api/users`
   - [x] `/api/events`
-  - [ ] `/api/registrations`
+  - [x] `/api/registrations`
   - [x] `/api/companies`
 
 - [x] Перейти с CommonJS на ES Modules
@@ -93,6 +95,6 @@
 - [ ] Переписать ответы от апи в формат: { data, meta?, message }
 
 - [ ] Отрефакторить архитектуру проекта
-  - [ ] Добавить корневую папку src
+  - [x] Добавить корневую папку src
   - [ ] Вынести запросы из контроллеров в сервисы
   - [ ] Сгруппировать контроллеры и сервисы по модулям (user, auth...)
