@@ -58,6 +58,10 @@ const options = {
 			name: 'Registrations',
 			description: 'Регистрация и отмена регистрации на мероприятие',
 		},
+		{
+			name: 'Comments',
+			description: 'Добавление и удаление комментариев',
+		},
 	],
 	apis: [
 		path.resolve(__dirname, '../routes/*.js'),
