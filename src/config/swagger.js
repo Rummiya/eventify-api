@@ -47,6 +47,10 @@ const options = {
 			description: 'Подписки и отписки от компаний',
 		},
 		{
+			name: 'Events',
+			description: 'Методы для работы с мероприятиями',
+		},
+		{
 			name: 'Like',
 			description: 'Добавление и удаление из избранных',
 		},
