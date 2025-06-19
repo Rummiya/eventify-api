@@ -31,12 +31,16 @@ const options = {
 	},
 	tags: [
 		{
+			name: 'Auth',
+			description: 'Авторизация и регистрация',
+		},
+		{
 			name: 'Users',
 			description: 'Методы для работы с пользователями',
 		},
 		{
-			name: 'Auth',
-			description: 'Авторизация и регистрация',
+			name: 'Company',
+			description: 'Методы для работы с компаниями',
 		},
 	],
 	apis: [
