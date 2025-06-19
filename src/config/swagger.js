@@ -50,6 +50,10 @@ const options = {
 			name: 'Like',
 			description: 'Добавление и удаление из избранных',
 		},
+		{
+			name: 'Registrations',
+			description: 'Регистрация и отмена регистрации на мероприятие',
+		},
 	],
 	apis: [
 		path.resolve(__dirname, '../routes/*.js'),
