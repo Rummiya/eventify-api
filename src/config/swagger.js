@@ -46,6 +46,10 @@ const options = {
 			name: 'Follow',
 			description: 'Подписки и отписки от компаний',
 		},
+		{
+			name: 'Like',
+			description: 'Добавление и удаление из избранных',
+		},
 	],
 	apis: [
 		path.resolve(__dirname, '../routes/*.js'),
