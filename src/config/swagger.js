@@ -1,4 +1,9 @@
+import path, { dirname } from 'path';
 import swaggerJSDoc from 'swagger-jsdoc';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const options = {
 	definition: {
@@ -24,7 +29,20 @@ const options = {
 		},
 		security: [{ bearerAuth: [] }],
 	},
-	apis: ['./routes/*.js', './controllers/*.js'], // где искать JSDoc-теги
+	tags: [
+		{
+			name: 'Users',
+			description: 'Методы для работы с пользователями',
+		},
+		{
+			name: 'Auth',
+			description: 'Авторизация и регистрация',
+		},
+	],
+	apis: [
+		path.resolve(__dirname, '../routes/*.js'),
+		path.resolve(__dirname, '../controllers/*.js'),
+	], // где искать JSDoc-теги
 };
 
 export const swaggerSpec = swaggerJSDoc(options);
