@@ -42,6 +42,10 @@ const options = {
 			name: 'Company',
 			description: 'Методы для работы с компаниями',
 		},
+		{
+			name: 'Follow',
+			description: 'Подписки и отписки от компаний',
+		},
 	],
 	apis: [
 		path.resolve(__dirname, '../routes/*.js'),
