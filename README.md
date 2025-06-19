@@ -72,15 +72,16 @@
 
 - [x] Перейти с CommonJS на ES Modules
 
-- [ ] Добавить swagger документацию
+- [x] Добавить swagger документацию
 
-  - [ ] `/auth`
-  - [ ] `/users`
-  - [ ] `/events`
-  - [ ] `/registrations`
-  - [ ] `/companies`
-  - [ ] `/likes`
-  - [ ] `/comments`
+  - [x] `/auth`
+  - [x] `/users`
+  - [x] `/companies`
+  - [x] `/follow`
+  - [x] `/events`
+  - [x] `/registrations`
+  - [x] `/likes`
+  - [x] `/comments`
 
 - [ ] Интегрировать TypeScript
 
