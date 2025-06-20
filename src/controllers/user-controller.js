@@ -56,26 +56,29 @@ export const UserController = {
 					? role.toUpperCase()
 					: undefined;
 
+			const filters = {};
+
+			if (name) {
+				filters.name = {
+					contains: name,
+					mode: 'insensitive',
+				};
+			}
+
+			if (normalizedRole) {
+				filters.role = {
+					role: normalizedRole,
+				};
+			}
+
 			const totalUsers = await prisma.user.count({
-				where: {
-					name: {
-						contains: name,
-						mode: 'insensitive',
-					},
-					...(normalizedRole && { role: normalizedRole }),
-				},
+				where: filters,
 			});
 
 			const users = await prisma.user.findMany({
 				skip,
 				take,
-				where: {
-					name: {
-						contains: name,
-						mode: 'insensitive',
-					},
-					...(normalizedRole && { role: normalizedRole }),
-				},
+				where: filters,
 				include: {
 					companyOwners: true,
 					comments: true,
@@ -91,13 +94,18 @@ export const UserController = {
 			res.json({
 				data: users,
 				meta: {
-					totalUsers,
+					total: totalUsers,
+					page: currentPage,
+					limit,
 					totalPages,
-					currentPage,
+					filters: { ...filters, orderBy, role },
 				},
 			});
 		} catch (error) {
-			res.status(500).json({ message: 'Internal server error', error });
+			console.log(error);
+			res
+				.status(500)
+				.json({ message: 'Ошибка при получении списка пользователей' });
 		}
 	},
 	updateUser: async (req, res) => {
