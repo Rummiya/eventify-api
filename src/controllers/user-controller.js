@@ -1,4 +1,5 @@
 import { prisma } from '../prisma/prisma-client.js';
+import { getPagination } from '../utils/getPagination.js';
 
 export const UserController = {
 	getUserById: async (req, res) => {
@@ -46,9 +47,7 @@ export const UserController = {
 				limit = '10',
 			} = req.query;
 
-			const currentPage = parseInt(page, 10);
-			const take = parseInt(limit, 10);
-			const skip = (currentPage - 1) * take;
+			const { currentPage, take, skip } = getPagination(page, limit);
 
 			const validRoles = ['ADMIN', 'COMPANY_OWNER', 'USER'];
 			const normalizedRole =
