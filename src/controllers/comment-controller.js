@@ -2,17 +2,17 @@ import { prisma } from '../prisma/prisma-client.js';
 
 export const CommentController = {
 	createComment: async (req, res) => {
-		const { content, postId } = req.body;
+		const { content, eventId } = req.body;
 		const userId = req.user.userId;
 
-		if (!content || !postId) {
+		if (!content || !eventId) {
 			return res.status(400).json({ error: 'Заполните все поля' });
 		}
 
 		try {
 			const comment = await prisma.comment.create({
 				data: {
-					postId,
+					eventId,
 					userId,
 					content,
 				},
