@@ -7,6 +7,9 @@
 		"start": "node ./src/server.js",
 		"dev": "nodemon ./src/server.js"
 	},
+	"prisma": {
+		"schema": "src/prisma/schema.prisma"
+	},
 	"dependencies": {
 		"@prisma/client": "^5.21.1",
 		"bcryptjs": "^2.4.3",
