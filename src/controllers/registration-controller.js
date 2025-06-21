@@ -39,7 +39,7 @@ export const RegistrationController = {
 			});
 		} catch (error) {
 			console.log(error);
-			res.status(500).json({ error: 'Internal Server Error' });
+			res.status(500).json({ error: 'Ошибка при регистрации на мероприятие' });
 		}
 	},
 	removeRegistration: async (req, res) => {
@@ -81,7 +81,9 @@ export const RegistrationController = {
 				.json({ message: 'Регистрация на мероприятие успешно отменена!' });
 		} catch (error) {
 			console.log(error);
-			res.status(500).json({ error: 'Internal Server Error' });
+			res
+				.status(500)
+				.json({ error: 'Ошибка при отмене регистрации на мероприятие' });
 		}
 	},
 };
