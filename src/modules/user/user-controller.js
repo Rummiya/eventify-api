@@ -77,6 +77,12 @@ export const UserController = {
 				where: filters,
 			});
 
+			await prisma.user.updateMany({
+				data: {
+					roleId: '6856eb10cd894bf583da21df',
+				},
+			});
+
 			const users = await prisma.user.findMany({
 				skip,
 				take,
@@ -85,6 +91,7 @@ export const UserController = {
 					companyOwners: true,
 					comments: true,
 					follows: true,
+					role: true,
 				},
 				orderBy: {
 					createdAt: orderBy === 'asc' ? 'asc' : 'desc',
