@@ -1,5 +1,7 @@
 import { prisma } from '../prisma/prisma-client.js';
 import { isUserCompanyOwner } from '../services/permissions.js';
+import { getPagination } from '../utils/getPagination.js';
+import { getTotalPages } from '../utils/getTotalPages.js';
 
 export const EventController = {
 	createEvent: async (req, res) => {
@@ -144,16 +146,14 @@ export const EventController = {
 				category,
 				city,
 				upcoming,
-				likedByUser,
+				isLiked,
 				orderBy = 'desc',
 				page = '1',
 				limit = '10',
 			} = req.query;
 			const userId = req.user.userId;
 
-			const currentPage = parseInt(page, 10);
-			const take = parseInt(limit, 10);
-			const skip = (currentPage - 1) * take;
+			const { currentPage, take, skip } = getPagination(page, limit);
 
 			const filters = {};
 
@@ -165,11 +165,15 @@ export const EventController = {
 					lte: new Date(new Date().setMonth(new Date().getMonth() + 1)),
 				};
 			}
-			if (likedByUser === 'true') {
+			if (isLiked === 'true') {
 				filters.likes = {
 					some: { userId },
 				};
 			}
+
+			const totalEvents = await prisma.event.count({
+				where: filters,
+			});
 
 			const events = await prisma.event.findMany({
 				skip,
@@ -205,10 +209,21 @@ export const EventController = {
 				},
 			});
 
-			res.json(events);
+			const totalPages = getTotalPages(totalEvents, take);
+
+			res.json({
+				data: events,
+				meta: {
+					total: totalEvents,
+					page: currentPage,
+					totalPages,
+					limit,
+					filters: { category, city, upcoming, isLiked, orderBy },
+				},
+			});
 		} catch (error) {
-			console.error('get all post error', error);
-			res.status(500).json({ error: 'Internal error server' });
+			console.error('get all event error', error);
+			res.status(500).json({ error: 'Ошибка при получении списка событий' });
 		}
 	},
 	getEventById: async (req, res) => {
@@ -232,7 +247,7 @@ export const EventController = {
 
 			const eventWithLikeInfo = {
 				...event,
-				likedByUser: event.likes.some(like => like.userId === userId),
+				isLiked: event.likes.some(like => like.userId === userId),
 			};
 
 			res.json(eventWithLikeInfo);
