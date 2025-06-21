@@ -207,6 +207,7 @@ export const CompanyController = {
 	},
 	getCompanyById: async (req, res) => {
 		const { id } = req.params;
+		const userId = req.user.userId;
 
 		try {
 			const company = await prisma.company.findUnique({
@@ -241,6 +242,14 @@ export const CompanyController = {
 							},
 						},
 					},
+					followers: {
+						select: {
+							id: true,
+							user: true,
+							userId: true,
+							createdAt: true,
+						},
+					},
 					_count: {
 						select: {
 							followers: true,
@@ -250,7 +259,12 @@ export const CompanyController = {
 				},
 			});
 
-			res.json(company);
+			const withFollowedInfo = {
+				...company,
+				isFollowed: company.followers.some(f => f.userId === userId),
+			};
+
+			res.json(withFollowedInfo);
 		} catch (error) {
 			res.status(500).json({ error: 'Ошибка при получении данных компании' });
 		}
