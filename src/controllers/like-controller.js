@@ -6,7 +6,9 @@ export const LikeController = {
 		const userId = req.user.userId;
 
 		if (!eventId) {
-			return res.status(400).json({ error: 'Заполните все поля' });
+			return res
+				.status(400)
+				.json({ error: 'Не передан идентификатор события' });
 		}
 
 		try {
@@ -15,7 +17,7 @@ export const LikeController = {
 			});
 
 			if (!event) {
-				return res.status(404).json({ error: 'Мероприятие не найдено' });
+				return res.status(404).json({ error: 'Событие не найдено' });
 			}
 
 			const existingLike = await prisma.like.findFirst({
@@ -36,7 +38,7 @@ export const LikeController = {
 			res.json({ data: like, message: 'Успешно добавлено в избранные' });
 		} catch (error) {
 			console.error('Add Like Error', error);
-			res.status(500).json({ error: 'Internal error server' });
+			res.status(500).json({ error: 'Ошибка при добавлении в избранные' });
 		}
 	},
 	removeLike: async (req, res) => {
@@ -44,7 +46,9 @@ export const LikeController = {
 		const userId = req.user.userId;
 
 		if (!id) {
-			return res.status(400).json({ error: 'Не передан ID ивента' });
+			return res
+				.status(400)
+				.json({ error: 'Не передан идентификатор события' });
 		}
 
 		try {
@@ -53,7 +57,7 @@ export const LikeController = {
 			});
 
 			if (!event) {
-				return res.status(404).json({ error: 'Мероприятие не найдено' });
+				return res.status(404).json({ error: 'Событие не найдено' });
 			}
 
 			const existingLike = await prisma.like.findFirst({
@@ -71,7 +75,7 @@ export const LikeController = {
 			res.status(201).json({ message: 'Успешно удалено из избранных' });
 		} catch (error) {
 			console.error('Delete Like Error', error);
-			res.status(500).json({ error: 'Internal error server' });
+			res.status(500).json({ error: 'Ошибка при удалении из избранных' });
 		}
 	},
 };
