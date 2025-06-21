@@ -28,10 +28,10 @@ export const AuthController = {
 				},
 			});
 
-			res.json(user);
+			res.json({ data: user, message: 'Аккаунт успешно создан!' });
 		} catch (error) {
 			console.error('Error in register', error);
-			res.status(500).json({ error: 'Internal error server' });
+			res.status(500).json({ error: 'Ошибка при создании аккаунта' });
 		}
 	},
 	login: async (req, res) => {
@@ -55,10 +55,17 @@ export const AuthController = {
 			}
 
 			const token = jwt.sign({ userId: user.id }, process.env.SECRET_KEY);
-			res.json({ token });
+
+			res.json({
+				data: {
+					token,
+					user,
+				},
+				message: 'Вы успешно вошли!',
+			});
 		} catch (error) {
 			console.error('Login error', error);
-			res.status(500).json({ error: 'Internal error server' });
+			res.status(500).json({ error: 'Ошибка при входе в аккаунт' });
 		}
 	},
 };
