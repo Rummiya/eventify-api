@@ -2,6 +2,8 @@ import { Router } from 'express';
 import multer from 'multer';
 import { CompanyController } from '../controllers/index.js';
 import { authenticateToken } from '../middlewares/auth.js';
+import { validate } from '../middlewares/validate.js';
+import { companySchema } from '../schemas/company-schemas.js';
 import { storage } from '../utils/uploadsStorage.js';
 
 export const companyRouter = Router();
@@ -68,6 +70,7 @@ companyRouter.get(
 companyRouter.post(
 	'/companies',
 	authenticateToken,
+	validate(companySchema),
 	upload.single('logo'),
 	CompanyController.createCompany
 );
@@ -115,6 +118,7 @@ companyRouter.post(
 companyRouter.put(
 	'/companies/:id',
 	authenticateToken,
+	validate(companySchema),
 	upload.single('logo'),
 	CompanyController.updateCompany
 );
