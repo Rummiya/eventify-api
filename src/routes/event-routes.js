@@ -2,6 +2,8 @@ import { Router } from 'express';
 import multer from 'multer';
 import { EventController } from '../controllers/index.js';
 import { authenticateToken } from '../middlewares/auth.js';
+import { validate } from '../middlewares/validate.js';
+import { eventSchema, updateEventSchema } from '../schemas/event-schema.js';
 import { storage } from '../utils/uploadsStorage.js';
 
 export const eventRouter = Router();
@@ -139,6 +141,7 @@ eventRouter.post(
 	'/events',
 	authenticateToken,
 	upload.single('banner'),
+	validate(eventSchema),
 	EventController.createEvent
 );
 
@@ -194,6 +197,7 @@ eventRouter.put(
 	'/events/:id',
 	authenticateToken,
 	upload.single('banner'),
+	validate(updateEventSchema),
 	EventController.updateEvent
 );
 

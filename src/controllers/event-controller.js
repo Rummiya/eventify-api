@@ -24,23 +24,7 @@ export const EventController = {
 			filePath = req.file.path;
 		}
 
-		const requiredFieldsMissing =
-			!title ||
-			!description ||
-			!date ||
-			!time ||
-			!city ||
-			!address ||
-			!category ||
-			!capacity;
-
 		try {
-			if (requiredFieldsMissing) {
-				return res
-					.status(400)
-					.json({ error: 'Заполните все обязательные поля' });
-			}
-
 			const existingCompany = await prisma.company.findUnique({
 				where: { id: companyId },
 			});
