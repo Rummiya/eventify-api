@@ -18,10 +18,10 @@ export const CommentController = {
 				},
 			});
 
-			res.json(comment);
+			res.json({ data: comment, message: 'Комментарий опубликован!' });
 		} catch (error) {
 			console.error('Error Creating Comment', error);
-			res.status(500).json({ error: 'Internal error server' });
+			res.status(500).json({ error: 'Ошибка при публикации комментария' });
 		}
 	},
 	deleteComment: async (req, res) => {
@@ -43,10 +43,10 @@ export const CommentController = {
 
 			await prisma.comment.delete({ where: { id } });
 
-			res.json(comment);
+			res.json({ message: 'Комментарий удален!' });
 		} catch (error) {
 			console.error('Error Deleting Comment', error);
-			res.status(500).json({ error: 'Internal error server' });
+			res.status(500).json({ error: 'Ошибка при удалении комментария' });
 		}
 	},
 };
