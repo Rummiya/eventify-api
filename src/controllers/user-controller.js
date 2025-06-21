@@ -35,7 +35,9 @@ export const UserController = {
 			res.json(user);
 		} catch (error) {
 			console.error('Get Current Error', error);
-			res.status(500).json({ error: 'Internal error server' });
+			res
+				.status(500)
+				.json({ error: 'Ошибка при получении данных пользователя' });
 		}
 	},
 	getAllUsers: async (req, res) => {
@@ -143,10 +145,10 @@ export const UserController = {
 				},
 			});
 
-			res.json(user);
+			res.json({ data: user, message: 'Данные успешно обновлены!' });
 		} catch (error) {
 			console.error('Update User Error', error);
-			res.status(500).json({ error: 'Internal error server' });
+			res.status(500).json({ error: 'Ошибка при обновлении данных' });
 		}
 	},
 	current: async (req, res) => {
@@ -193,7 +195,7 @@ export const UserController = {
 			res.json(user);
 		} catch (error) {
 			console.error('Get Current Error', error);
-			res.status(500).json({ error: 'Internal error server' });
+			res.status(500).json({ error: 'Ошибка при загрузке профиля' });
 		}
 	},
 };
