@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import multer from 'multer';
 import { UserController } from '../controllers/index.js';
-import { authenticateToken } from '../middleware/auth.js';
+import { authenticateToken } from '../middlewares/auth.js';
 import { storage } from '../utils/uploadsStorage.js';
 
 export const userRouter = Router();
