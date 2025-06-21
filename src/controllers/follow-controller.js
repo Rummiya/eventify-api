@@ -1,15 +1,20 @@
 import { prisma } from '../prisma/prisma-client.js';
+import { isUserCompanyOwner } from '../services/permissions.js';
 
 export const FollowController = {
 	followCompany: async (req, res) => {
 		const { companyId } = req.body;
 		const userId = req.user.userId;
 
-		if (companyId === userId) {
-			return res.status(500).json({ error: 'Нельзя подписаться на себя' });
-		}
-
 		try {
+			const isOwner = await isUserCompanyOwner(userId, companyId);
+
+			if (isOwner) {
+				return res
+					.status(500)
+					.json({ error: 'Нельзя подписаться на свою компанию' });
+			}
+
 			const existingFollow = await prisma.companyFollower.findFirst({
 				where: { userId, companyId },
 			});
@@ -25,10 +30,10 @@ export const FollowController = {
 				},
 			});
 
-			res.status(201).json({ message: 'Подписка успешно создана' });
+			res.status(201).json({ message: 'Подписка успешно оформлена' });
 		} catch (error) {
 			console.error('Follow Error', error);
-			res.status(500).json({ error: 'Internal Server Error' });
+			res.status(500).json({ error: 'Ошибка при оформлении подписки' });
 		}
 	},
 	unfollowCompany: async (req, res) => {
@@ -51,7 +56,7 @@ export const FollowController = {
 			res.status(201).json({ message: 'Подписка успешно удалена' });
 		} catch (error) {
 			console.error('Unfollow Error', error);
-			res.status(500).json({ error: 'Internal Server Error' });
+			res.status(500).json({ error: 'Ошибка при удалении подписки' });
 		}
 	},
 };
