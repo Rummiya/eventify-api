@@ -14,7 +14,8 @@ model User {
   name      String?
   avatarUrl String? @map("avatar_url")
 
-  role Role @default(USER)
+  role   Role   @relation(fields: [roleId], references: [id])
+  roleId String @map("role_id") @db.ObjectId
 
   companyOwners CompanyOwner[]
   likes         Like[]
@@ -28,11 +29,17 @@ model User {
   @@map("user")
 }
 
-enum Role {
-  USER
-  ADMIN
-  COMPANY_OWNER
+model Role {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  value String @unique
+  user  User[]
 }
+
+// enum Role {
+//   USER
+//   ADMIN
+//   COMPANY_OWNER
+// }
 
 model Company {
   id      String  @id @default(auto()) @map("_id") @db.ObjectId
