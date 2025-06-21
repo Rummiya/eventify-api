@@ -18,7 +18,9 @@ export const authenticateToken = async (req, res, next) => {
 		});
 
 		if (!user) {
-			return res.status(401).json({ error: 'Пользователь не найден' });
+			return res
+				.status(401)
+				.json({ error: 'Токен действителен, но пользователь не найден' });
 		}
 
 		req.user = decoded;
