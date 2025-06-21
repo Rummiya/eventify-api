@@ -1,12 +1,18 @@
 import { prisma } from '../prisma/prisma-client.js';
 import { isUserCompanyOwner } from '../services/permissions.js';
+import { getPagination } from '../utils/getPagination.js';
+import { getTotalPages } from '../utils/getTotalPages.js';
 
 export const CompanyController = {
 	getMyCompanies: async (req, res) => {
-		try {
-			const userId = req.user.userId;
+		const { orderBy = 'desc' } = req.query;
+		const userId = req.user.userId;
 
+		try {
 			const companies = await prisma.company.findMany({
+				orderBy: {
+					createdAt: orderBy === 'asc' ? 'asc' : 'desc',
+				},
 				where: {
 					owners: {
 						some: {
@@ -16,10 +22,15 @@ export const CompanyController = {
 				},
 			});
 
-			res.json(companies);
+			res.json({
+				data: companies,
+				meta: { total: companies.length, filters: { orderBy } },
+			});
 		} catch (error) {
 			console.error(error);
-			res.status(500).json({ error: 'Internal server error' });
+			res
+				.status(500)
+				.json({ error: 'Ошибка при получении списка ваших компаний' });
 		}
 	},
 	createCompany: async (req, res) => {
@@ -74,7 +85,7 @@ export const CompanyController = {
 				},
 			});
 
-			res.status(200).json(company);
+			res.json({ data: company, message: 'Компания успешно создана!' });
 		} catch (error) {
 			console.error(error);
 			res.status(500).json({ error: 'Ошибка при создании компании' });
@@ -120,14 +131,25 @@ export const CompanyController = {
 				},
 			});
 
-			res.json(updatedCompany);
+			res.json({
+				data: updatedCompany,
+				message: 'Данные компании успешно обновлены!',
+			});
 		} catch (error) {
-			res.status(500).json({ error: 'Internal Server Error' });
+			res.status(500).json({ error: 'Ошибка при обновлении данных компании' });
 		}
 	},
 	getAllCompanies: async (req, res) => {
-		const { name, followed } = req.query;
+		const {
+			name,
+			followed,
+			page = '1',
+			limit = '10',
+			orderBy = 'desc',
+		} = req.query;
 		const userId = req.user.userId;
+
+		const { currentPage, skip, take } = getPagination(page, limit);
 
 		const filters = {};
 
@@ -146,8 +168,17 @@ export const CompanyController = {
 		}
 
 		try {
-			const companies = await prisma.company.findMany({
+			const totalCompanies = await prisma.company.count({
 				where: filters,
+			});
+
+			const companies = await prisma.company.findMany({
+				skip,
+				take,
+				where: filters,
+				orderBy: {
+					createdAt: orderBy === 'asc' ? 'asc' : 'desc',
+				},
 				include: {
 					_count: {
 						select: {
@@ -158,9 +189,20 @@ export const CompanyController = {
 				},
 			});
 
-			res.json(companies);
+			const totalPages = getTotalPages(totalCompanies, take);
+
+			res.json({
+				data: companies,
+				meta: {
+					total: totalCompanies,
+					page: currentPage,
+					totalPages,
+					limit,
+					filters: { followed, orderBy, name },
+				},
+			});
 		} catch (error) {
-			res.status(500).json({ error: 'Internal Server Error' });
+			res.status(500).json({ error: 'Ошибка при получении всех компаний' });
 		}
 	},
 	getCompanyById: async (req, res) => {
@@ -210,7 +252,7 @@ export const CompanyController = {
 
 			res.json(company);
 		} catch (error) {
-			res.status(500).json({ error: 'Internal Server Error' });
+			res.status(500).json({ error: 'Ошибка при получении данных компании' });
 		}
 	},
 	deleteCompany: async (req, res) => {
@@ -236,17 +278,17 @@ export const CompanyController = {
 					.json({ error: 'Вы не являетесь владельцем компании' });
 			}
 
-			const transaction = await prisma.$transaction([
+			await prisma.$transaction([
 				prisma.companyFollower.deleteMany({ where: { companyId: id } }),
 				prisma.companyOwner.deleteMany({ where: { companyId: id } }),
 				prisma.event.deleteMany({ where: { companyId: id } }),
 				prisma.company.delete({ where: { id } }),
 			]);
 
-			res.json(transaction);
+			res.json({ message: 'Компания успешно удалена!' });
 		} catch (error) {
 			console.log(error);
-			res.status(500).json({ error: 'Internal Server Error' });
+			res.status(500).json({ error: 'Ошибка при удалении компании' });
 		}
 	},
 };
