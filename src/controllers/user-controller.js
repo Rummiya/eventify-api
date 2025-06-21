@@ -1,5 +1,6 @@
 import { prisma } from '../prisma/prisma-client.js';
 import { getPagination } from '../utils/getPagination.js';
+import { getTotalPages } from '../utils/getTotalPages.js';
 
 export const UserController = {
 	getUserById: async (req, res) => {
@@ -88,7 +89,7 @@ export const UserController = {
 				},
 			});
 
-			const totalPages = Math.ceil(totalUsers / take);
+			const totalPages = getTotalPages(totalUsers, take);
 
 			res.json({
 				data: users,
