@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { LikeController } from '../controllers/index.js';
-import { authenticateToken } from '../middlewares/auth.js';
+import { authenticateToken } from '../../middlewares/auth.js';
+import { LikeController } from './like-controller.js';
 
 export const likeRouter = Router();
 

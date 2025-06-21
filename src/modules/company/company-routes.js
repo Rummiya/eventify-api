@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import multer from 'multer';
-import { CompanyController } from '../controllers/index.js';
-import { authenticateToken } from '../middlewares/auth.js';
-import { validateBody } from '../middlewares/validateBody.js';
-import { companySchema } from '../schemas/company-schemas.js';
-import { storage } from '../utils/uploadsStorage.js';
+import { authenticateToken } from '../../middlewares/auth.js';
+import { validateBody } from '../../middlewares/validateBody.js';
+import { storage } from '../../utils/uploadsStorage.js';
+import { CompanyController } from './company-controller.js';
+import { companySchema } from './company-schemas.js';
 
 export const companyRouter = Router();
 

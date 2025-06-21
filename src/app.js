@@ -10,7 +10,7 @@ import logger from 'morgan';
 
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './config/swagger.js';
-import { router } from './routes/index.js';
+import { router } from './router.js';
 
 import { ensureUploadDirs } from './utils/ensureUploadDirs.js';
 

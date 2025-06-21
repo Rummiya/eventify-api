@@ -1,4 +1,4 @@
-import { prisma } from '../prisma/prisma-client.js';
+import { prisma } from '../../prisma/prisma-client.js';
 
 export const CommentController = {
 	createComment: async (req, res) => {

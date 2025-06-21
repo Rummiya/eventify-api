@@ -1,7 +1,7 @@
-import { prisma } from '../prisma/prisma-client.js';
-import { isUserCompanyOwner } from '../services/permissions.js';
-import { getPagination } from '../utils/getPagination.js';
-import { getTotalPages } from '../utils/getTotalPages.js';
+import { prisma } from '../../prisma/prisma-client.js';
+import { isUserCompanyOwner } from '../../services/permissions.js';
+import { getPagination } from '../../utils/getPagination.js';
+import { getTotalPages } from '../../utils/getTotalPages.js';
 
 export const CompanyController = {
 	getMyCompanies: async (req, res) => {

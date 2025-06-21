@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import multer from 'multer';
-import { UserController } from '../controllers/index.js';
-import { authenticateToken } from '../middlewares/auth.js';
-import { validateBody } from '../middlewares/validateBody.js';
-import { userSchema } from '../schemas/user-schema.js';
-import { storage } from '../utils/uploadsStorage.js';
+import { authenticateToken } from '../../middlewares/auth.js';
+import { validateBody } from '../../middlewares/validateBody.js';
+import { storage } from '../../utils/uploadsStorage.js';
+import { UserController } from './user-controller.js';
+import { userSchema } from './user-schema.js';
 
 export const userRouter = Router();
 

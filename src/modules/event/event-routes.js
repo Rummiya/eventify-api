@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import multer from 'multer';
-import { EventController } from '../controllers/index.js';
-import { authenticateToken } from '../middlewares/auth.js';
-import { validateBody } from '../middlewares/validateBody.js';
-import { eventSchema, updateEventSchema } from '../schemas/event-schema.js';
-import { storage } from '../utils/uploadsStorage.js';
+import { authenticateToken } from '../../middlewares/auth.js';
+import { validateBody } from '../../middlewares/validateBody.js';
+import { storage } from '../../utils/uploadsStorage.js';
+import { EventController } from './event-controller.js';
+import { eventSchema, updateEventSchema } from './event-schema.js';
 
 export const eventRouter = Router();
 

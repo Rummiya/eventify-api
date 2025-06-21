@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { FollowController } from '../controllers/index.js';
-import { authenticateToken } from '../middlewares/auth.js';
+import { authenticateToken } from '../../middlewares/auth.js';
+import { FollowController } from './follow-controller.js';
 
 export const followRouter = Router();
 

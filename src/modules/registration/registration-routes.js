@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { RegistrationController } from '../controllers/index.js';
-import { authenticateToken } from '../middlewares/auth.js';
+import { authenticateToken } from '../../middlewares/auth.js';
+import { RegistrationController } from './registration-controller.js';
 
 export const registrationRouter = Router();
 

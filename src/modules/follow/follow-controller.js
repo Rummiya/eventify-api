@@ -1,5 +1,5 @@
-import { prisma } from '../prisma/prisma-client.js';
-import { isUserCompanyOwner } from '../services/permissions.js';
+import { prisma } from '../../prisma/prisma-client.js';
+import { isUserCompanyOwner } from '../../services/permissions.js';
 
 export const FollowController = {
 	followCompany: async (req, res) => {

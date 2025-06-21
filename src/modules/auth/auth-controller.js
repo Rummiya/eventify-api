@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { prisma } from '../prisma/prisma-client.js';
+import { prisma } from '../../prisma/prisma-client.js';
 
 export const AuthController = {
 	register: async (req, res) => {
