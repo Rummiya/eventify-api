@@ -2,7 +2,7 @@ import { Router } from 'express';
 import multer from 'multer';
 import { CompanyController } from '../controllers/index.js';
 import { authenticateToken } from '../middlewares/auth.js';
-import { validate } from '../middlewares/validate.js';
+import { validateBody } from '../middlewares/validateBody.js';
 import { companySchema } from '../schemas/company-schemas.js';
 import { storage } from '../utils/uploadsStorage.js';
 
@@ -70,8 +70,8 @@ companyRouter.get(
 companyRouter.post(
 	'/companies',
 	authenticateToken,
-	validate(companySchema),
 	upload.single('logo'),
+	validateBody(companySchema),
 	CompanyController.createCompany
 );
 
@@ -118,8 +118,8 @@ companyRouter.post(
 companyRouter.put(
 	'/companies/:id',
 	authenticateToken,
-	validate(companySchema),
 	upload.single('logo'),
+	validateBody(companySchema),
 	CompanyController.updateCompany
 );
 

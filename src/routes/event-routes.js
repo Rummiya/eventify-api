@@ -2,7 +2,7 @@ import { Router } from 'express';
 import multer from 'multer';
 import { EventController } from '../controllers/index.js';
 import { authenticateToken } from '../middlewares/auth.js';
-import { validate } from '../middlewares/validate.js';
+import { validateBody } from '../middlewares/validateBody.js';
 import { eventSchema, updateEventSchema } from '../schemas/event-schema.js';
 import { storage } from '../utils/uploadsStorage.js';
 
@@ -141,7 +141,7 @@ eventRouter.post(
 	'/events',
 	authenticateToken,
 	upload.single('banner'),
-	validate(eventSchema),
+	validateBody(eventSchema),
 	EventController.createEvent
 );
 
@@ -197,7 +197,7 @@ eventRouter.put(
 	'/events/:id',
 	authenticateToken,
 	upload.single('banner'),
-	validate(updateEventSchema),
+	validateBody(updateEventSchema),
 	EventController.updateEvent
 );
 

@@ -2,7 +2,7 @@ import { Router } from 'express';
 import multer from 'multer';
 import { UserController } from '../controllers/index.js';
 import { authenticateToken } from '../middlewares/auth.js';
-import { validate } from '../middlewares/validate.js';
+import { validateBody } from '../middlewares/validateBody.js';
 import { userSchema } from '../schemas/user-schema.js';
 import { storage } from '../utils/uploadsStorage.js';
 
@@ -134,7 +134,7 @@ userRouter.get('/users', authenticateToken, UserController.getAllUsers);
 userRouter.put(
 	'/users/:id',
 	authenticateToken,
-	validate(userSchema),
 	upload.single('avatar'),
+	validateBody(userSchema),
 	UserController.updateUser
 );
