@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import { AuthController } from '../controllers/index.js';
+import { validate } from '../middlewares/validate.js';
+import { loginSchema, registerSchema } from '../schemas/auth-schema.js';
 
 export const authRouter = Router();
 
@@ -31,7 +33,7 @@ export const authRouter = Router();
  *       401:
  *         description: Неверные данные
  */
-authRouter.post('/auth/login', AuthController.login);
+authRouter.post('/auth/login', validate(loginSchema), AuthController.login);
 
 /**
  * @swagger
@@ -61,4 +63,8 @@ authRouter.post('/auth/login', AuthController.login);
  *       401:
  *         description: Неверные данные
  */
-authRouter.post('/auth/register', AuthController.register);
+authRouter.post(
+	'/auth/register',
+	validate(registerSchema),
+	AuthController.register
+);

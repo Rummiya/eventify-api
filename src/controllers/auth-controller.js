@@ -6,10 +6,6 @@ export const AuthController = {
 	register: async (req, res) => {
 		const { email, password, name } = req.body;
 
-		if (!email || !password || !name) {
-			return res.status(400).json({ error: 'Заполните все поля' });
-		}
-
 		try {
 			const existingUser = await prisma.user.findUnique({ where: { email } });
 
@@ -36,10 +32,6 @@ export const AuthController = {
 	},
 	login: async (req, res) => {
 		const { email, password } = req.body;
-
-		if (!email || !password) {
-			return res.status(400).json({ error: 'Заполните все поля' });
-		}
 
 		try {
 			const user = await prisma.user.findUnique({ where: { email } });
