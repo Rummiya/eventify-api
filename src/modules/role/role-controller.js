@@ -20,4 +20,12 @@ export const RoleController = {
 			res.status(500).json({ error: 'Ошибка при создании роли' });
 		}
 	},
+	getRoles: async (_, res) => {
+		try {
+			const roles = await prisma.role.findMany();
+			res.json({ data: roles });
+		} catch (error) {
+			res.status(500).json({ error: 'Ошибка при получении списка ролей' });
+		}
+	},
 };

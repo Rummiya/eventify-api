@@ -6,3 +6,4 @@ import { roleSchema } from './role-schema.js';
 export const roleRouter = Router();
 
 roleRouter.post('/role', validateBody(roleSchema), RoleController.createRole);
+roleRouter.get('/role', RoleController.getRoles);
