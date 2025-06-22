@@ -64,8 +64,8 @@ const options = {
 		},
 	],
 	apis: [
-		path.resolve(__dirname, '../routes/*.js'),
-		path.resolve(__dirname, '../controllers/*.js'),
+		path.resolve(__dirname, '../modules/*/*routes.js'),
+		path.resolve(__dirname, '../modules/*/*controller.js'),
 	], // где искать JSDoc-теги
 };
 
