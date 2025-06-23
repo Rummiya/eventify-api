@@ -261,7 +261,7 @@ export const EventController = {
 					.json({ error: 'Вы не владелец компании, разместившей этот пост' });
 			}
 
-			const transaction = await prisma.$transaction([
+			await prisma.$transaction([
 				prisma.registration.deleteMany({ where: { eventId: id } }),
 				prisma.comment.deleteMany({ where: { eventId: id } }),
 				prisma.like.deleteMany({ where: { eventId: id } }),
