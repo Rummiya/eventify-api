@@ -62,10 +62,10 @@ export const EventController = {
 				},
 			});
 
-			res.json(event);
+			res.json({ data: event, message: 'Событие успешно создано!' });
 		} catch (error) {
 			console.error(error);
-			res.status(500).json({ error: 'Internal error server' });
+			res.status(500).json({ error: 'Ошибка при создании события' });
 		}
 	},
 	updateEvent: async (req, res) => {
@@ -118,10 +118,10 @@ export const EventController = {
 				},
 			});
 
-			res.json(updatedEvent);
+			res.json({ data: updatedEvent, message: 'Данные события обновлены!' });
 		} catch (error) {
 			console.error(error);
-			res.status(500).json({ error: 'Internal error server' });
+			res.status(500).json({ error: 'Ошибка при обновлении данных события' });
 		}
 	},
 	getAllEvents: async (req, res) => {
@@ -234,7 +234,7 @@ export const EventController = {
 				isLiked: event.likes.some(like => like.userId === userId),
 			};
 
-			res.json(eventWithLikeInfo);
+			res.json({ data: eventWithLikeInfo });
 		} catch (error) {
 			console.error('get post by id error', error);
 			res.status(500).json({ error: 'Internal error server' });
@@ -268,10 +268,10 @@ export const EventController = {
 				prisma.event.delete({ where: { id } }),
 			]);
 
-			res.json(transaction);
+			res.json({ message: 'Событие успешно удалено!' });
 		} catch (error) {
 			console.error('delete event error', error);
-			res.status(500).json({ error: 'Internal error server' });
+			res.status(500).json({ error: 'Ошибка при удалении события' });
 		}
 	},
 };
