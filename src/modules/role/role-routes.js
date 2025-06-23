@@ -12,3 +12,4 @@ roleRouter.put(
 	validateBody(roleSchema),
 	RoleController.updateRole
 );
+roleRouter.delete('/role/:id', RoleController.deleteRole);
