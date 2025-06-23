@@ -1,0 +1,18 @@
+# Типы коммитов (выбери подходящее):
+# feat:      Добавление новой фичи
+# fix:       Исправление бага
+# refactor:  Рефакторинг без изменения поведения
+# chore:     Технические задачи (инфраструктура, конфиги)
+# style:     Форматирование, не влияющее на логику
+# docs:      Обновление документации
+# temp:      Временный патч (в будущем удалить!)
+
+# Формат:
+# <type>(scope): краткое описание
+#
+# Примеры:
+# feat(user): add isBanned and banReason fields
+# fix(auth): handle expired token error
+# refactor(event): simplify event filtering logic
+# chore(temp): assign default role to all users for testing
+# cleanup: remove temp code from getAllUsers
