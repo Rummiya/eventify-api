@@ -10,6 +10,11 @@ export const UserController = {
 			const user = await prisma.user.findUnique({
 				where: { id },
 				include: {
+					companies: {
+						include: {
+							company: true,
+						},
+					},
 					follows: {
 						include: {
 							company: true,
@@ -82,7 +87,7 @@ export const UserController = {
 				take,
 				where: filters,
 				include: {
-					companyOwners: true,
+					companies: true,
 					comments: true,
 					follows: true,
 					role: true,
@@ -164,7 +169,11 @@ export const UserController = {
 							event: true,
 						},
 					},
-					companyOwners: true,
+					companies: {
+						include: {
+							company: true,
+						},
+					},
 					follows: {
 						include: {
 							company: true,

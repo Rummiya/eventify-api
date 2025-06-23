@@ -20,7 +20,7 @@ model User {
   role   Role   @relation(fields: [roleId], references: [id])
   roleId String @map("role_id") @db.ObjectId
 
-  companyOwners CompanyOwner[]
+  companies     CompanyOwner[]
   likes         Like[]
   comments      Comment[]
   registrations Registration[]
