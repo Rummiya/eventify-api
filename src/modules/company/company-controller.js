@@ -292,10 +292,19 @@ export const CompanyController = {
 					.json({ error: 'Вы не являетесь владельцем компании' });
 			}
 
+			const events = await prisma.event.findMany({ where: { companyId: id } });
+			const eventIds = events.map(e => e.id);
+
 			await prisma.$transaction([
+				prisma.registration.deleteMany({
+					where: { eventId: { in: eventIds } },
+				}),
+				prisma.comment.deleteMany({ where: { eventId: { in: eventIds } } }),
+				prisma.like.deleteMany({ where: { eventId: { in: eventIds } } }),
+				prisma.event.deleteMany({ where: { id: { in: eventIds } } }),
+
 				prisma.companyFollower.deleteMany({ where: { companyId: id } }),
 				prisma.companyOwner.deleteMany({ where: { companyId: id } }),
-				prisma.event.deleteMany({ where: { companyId: id } }),
 				prisma.company.delete({ where: { id } }),
 			]);
 
