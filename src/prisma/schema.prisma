@@ -14,6 +14,9 @@ model User {
   name      String?
   avatarUrl String? @map("avatar_url")
 
+  isBanned  Boolean @default(false) @map("is_banned")
+  banReason String? @map("ban_reason")
+
   role   Role   @relation(fields: [roleId], references: [id])
   roleId String @map("role_id") @db.ObjectId
 
@@ -30,19 +33,16 @@ model User {
 }
 
 model Role {
-  id    String @id @default(auto()) @map("_id") @db.ObjectId
-  value String @unique
-  user  User[]
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  value     String  @unique
+  isSystems Boolean @default(false) @map("is_systems")
+  user      User[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-}
 
-// enum Role {
-//   USER
-//   ADMIN
-//   COMPANY_OWNER
-// }
+  @@map("role")
+}
 
 model Company {
   id      String  @id @default(auto()) @map("_id") @db.ObjectId
@@ -50,6 +50,9 @@ model Company {
   logoUrl String? @map("logo_url")
   bio     String?
   website String?
+
+  isBanned  Boolean @default(false) @map("is_banned")
+  banReason String? @map("ban_reason")
 
   owners    CompanyOwner[]
   events    Event[]
@@ -62,10 +65,10 @@ model Company {
 }
 
 model CompanyOwner {
-  id     String @id @default(auto()) @map("_id") @db.ObjectId
-  user   User   @relation(fields: [userId], references: [id])
-  userId String @map("user_id") @db.ObjectId
+  id String @id @default(auto()) @map("_id") @db.ObjectId
 
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String  @map("user_id") @db.ObjectId
   company   Company @relation(fields: [companyId], references: [id])
   companyId String  @map("company_id") @db.ObjectId
 
@@ -75,9 +78,8 @@ model CompanyOwner {
 model CompanyFollower {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  user   User   @relation(fields: [userId], references: [id])
-  userId String @map("user_id") @db.ObjectId
-
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String  @map("user_id") @db.ObjectId
   company   Company @relation(fields: [companyId], references: [id])
   companyId String  @map("company_id") @db.ObjectId
 
@@ -98,6 +100,8 @@ model Event {
   category    String
   capacity    Int
 
+  isArchived Boolean @default(false)
+
   company   Company @relation(fields: [companyId], references: [id])
   companyId String  @map("company_id") @db.ObjectId
 
@@ -114,9 +118,8 @@ model Event {
 model Registration {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  user   User   @relation(fields: [userId], references: [id])
-  userId String @map("user_id") @db.ObjectId
-
+  user    User   @relation(fields: [userId], references: [id])
+  userId  String @map("user_id") @db.ObjectId
   event   Event  @relation(fields: [eventId], references: [id])
   eventId String @map("event_id") @db.ObjectId
 
