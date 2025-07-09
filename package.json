@@ -4,12 +4,14 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"start": "node ./src/server.js",
-		"dev": "nodemon ./src/server.js",
-		"progress": "node ./scripts/update-progress.js"
+		"start": "node src/server.js",
+		"dev": "nodemon src/server.js",
+		"progress": "node scripts/update-progress.js",
+		"seed": "node scripts/init-db.js"
 	},
 	"prisma": {
-		"schema": "src/prisma/schema.prisma"
+		"schema": "src/prisma/schema.prisma",
+		"seed": "scripts/init-db.js"
 	},
 	"dependencies": {
 		"@prisma/client": "^5.21.1",
